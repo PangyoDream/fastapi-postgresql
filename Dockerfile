@@ -10,4 +10,4 @@ RUN poetry install
 
 COPY . /code/
 
-CMD ["poetry", "run", "uvicorn", "main:app"]
+CMD ["poetry", "run", "uvicorn", "app.main:app"]
