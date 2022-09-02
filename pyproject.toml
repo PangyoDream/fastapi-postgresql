@@ -1,0 +1,27 @@
+[tool.poetry]
+name = "fastapi-postgresql"
+version = "0.1.0"
+description = ""
+authors = ["Your Name <you@example.com>"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = ">=3.7, <3.11"
+uvicorn = "^0.18.3"
+fastapi = "^0.81.0"
+SQLAlchemy = "^1.4.40"
+psycopg2-binary = "^2.9.3"
+python-multipart = "^0.0.5"
+Jinja2 = "^3.1.2"
+Pillow = "^9.2.0"
+keras = "^2.9.0"
+numpy = "1.20.*"
+protobuf = "3.9.*"
+tensorflow = "^2.9.1"
+python-dotenv = "^0.20.0"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
