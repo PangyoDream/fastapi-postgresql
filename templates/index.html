@@ -15,6 +15,8 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
     integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
     crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.3.1/dist/tf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8/dist/teachablemachine-image.min.js"></script>
   </head>
   <body>
     <header class="pb-3 mb-4">
@@ -32,21 +34,14 @@
                     <input name= "image" class="form-control" type="file" id="formFile" onchange="preview();" >
                     <!-- <label for="formFile" style="cursor: pointer;">얼굴 이미지를 올려주세요</label> -->
                 </div>
+                
+                <div>
+                  <button onclick="init();" type="button">click</button>
+                </div>
                 <div style="margin: auto; display: block; max-inline-size: 200px; min-inline-size: 150px;">
                   <img id="frame" src="" class="img-fluid" style="margin-bottom: 4vh; "/>
                 </div>
-            </div>
-    
-            <script>
-                function preview() {
-                    frame.src = URL.createObjectURL(event.target.files[0]);
-                }
-                function clearImage() {
-                    document.getElementById('formFile').value = null;
-                    frame.src = "";
-                }
-                
-            </script>
+              </div>
 
             <div class="form-floating mb-3">
             <input type="text" class="form-control" id="name" name="name" placeholder="name">
@@ -88,7 +83,7 @@
             <label class="form-check-label" for="exampleCheck1">개인정보 수집에 동의</label>
             </div>
             <div class="d-grid gap-2 col-2 mx-auto">
-                <button type="submit" class="btn btn-success">결과 보기</button>
+                <button type="submit" class="btn btn-success" onclick="init();">결과 보기</button>
             </div>  
         </form>
         <div id="label-container"></div>
@@ -111,41 +106,86 @@
         </footer>
     </div>
     <script>
-
-        $(document).ready(function () {
-          setDateBox();
-        });
       
-        // select box 연도 , 월 표시
-        function setDateBox() {
-          var dt = new Date();
-          var year = "";
-          var com_year = dt.getFullYear();
-      
-          // 발행 뿌려주기
-          $("#year").append("<option value=''>년도</option>");
-      
-          // 올해 기준으로 -50년부터 +1년을 보여준다.
-          for (var y = (com_year - 40); y <= (com_year - 20); y++) {
-            $("#year").append("<option value='" + y + "'>" + y + " 년" + "</option>");
-          }
-      
-          // 월 뿌려주기(1월부터 12월)
-          var month;
-          $("#month").append("<option value=''>월</option>");
-          for (var i = 1; i <= 12; i++) {
-            $("#month").append("<option value='" + i + "'>" + i + " 월" + "</option>");
-          }
-      
-          // 일 뿌려주기(1일부터 31일)
-          var day;
-          $("#day").append("<option value=''>일</option>");
-          for (var i = 1; i <= 31; i++) {
-            $("#day").append("<option value='" + i + "'>" + i + " 일" + "</option>");
-          }
-      
+      $(document).ready(function () {
+        setDateBox();
+      });
+    
+      // select box 연도 , 월 표시
+      function setDateBox() {
+        var dt = new Date();
+        var year = "";
+        var com_year = dt.getFullYear();
+    
+        // 발행 뿌려주기
+        $("#year").append("<option value=''>년도</option>");
+    
+        // 올해 기준으로 -50년부터 +1년을 보여준다.
+        for (var y = (com_year - 40); y <= (com_year - 20); y++) {
+          $("#year").append("<option value='" + y + "'>" + y + " 년" + "</option>");
         }
-      
+    
+        // 월 뿌려주기(1월부터 12월)
+        var month;
+        $("#month").append("<option value=''>월</option>");
+        for (var i = 1; i <= 12; i++) {
+          $("#month").append("<option value='" + i + "'>" + i + " 월" + "</option>");
+        }
+    
+        // 일 뿌려주기(1일부터 31일)
+        var day;
+        $("#day").append("<option value=''>일</option>");
+        for (var i = 1; i <= 31; i++) {
+          $("#day").append("<option value='" + i + "'>" + i + " 일" + "</option>");
+        }
+    
+      }
+      function preview() {
+          frame.src = URL.createObjectURL(event.target.files[0]);
+          
+      }
+      function clearImage() {
+          document.getElementById('formFile').value = null;
+          frame.src = "";
+      }       
+    </script>
+    
+    <script type="text/javascript">
+        // More API functions here:
+        // https://github.com/googlecreativelab/teachablemachine-community/tree/master/libraries/image
+    
+        // the link to your model provided by Teachable Machine export panel
+        async function init() {
+            const URL = "https://teachablemachine.withgoogle.com/models/ILYRx_bl1/";
+            const modelURL = URL + "model.json";
+            const metadataURL = URL + "metadata.json";
+            let model, maxPredictions;
+            // load the model and metadata
+            // Refer to tmImage.loadFromFiles() in the API to support files from a file picker
+            // or files from your local hard drive
+            // Note: the pose library adds "tmImage" object to your window (window.tmImage)
+            model = await tmImage.load(modelURL, metadataURL);
+            maxPredictions = model.getTotalClasses();    
+            // append elements to the DOM
+            // labelContainer = document.getElementById("label-container");
+            // for (let i = 0; i < maxPredictions; i++) { // and class labels
+            //     labelContainer.appendChild(document.createElement("div"));
+            // }
+            // predict can take in an image, video or canvas html element
+            var image = document.getElementById("frame");
+            const prediction = await model.predict(image, false);
+            var max = 0;
+            var keyword = '';
+            for (let i = 0; i < maxPredictions; i++) {
+                const classPrediction =
+                    prediction[i].className + ": " + prediction[i].probability.toFixed(2);
+                if (prediction[i].probability.toFixed(2) > max){
+                  max = prediction[i].probability.toFixed(2);
+                  keyword = prediction[i].className;
+                }
+            }
+            
+        }
     </script>
     
   </body>
