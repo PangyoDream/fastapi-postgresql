@@ -27,16 +27,14 @@
         <div class="mx-auto" style="width: 200px; margin-top: 2vh; margin-bottom: 2vh;">
             정보를 입력해주세요
         </div>
-        <form action="/result" method="post" enctype="multipart/form-data" id="form-data">
+        <form action="/result" method="post" enctype="multipart/form-data" id="formdata" >
             <div class="mx-auto" >
                 <div class="mb-5">
                     <label for="formFile" class="form-label">얼굴 이미지</label>
-                    <input name= "image" class="form-control" type="file" id="formFile" onchange="preview();" >
+                    <input name= "image" class="form-control" type="file" id="formFile" onchange="preview(); init();">
+                    <!-- <button type="button" onclick=" init();">click</button> -->
+                    
                     <!-- <label for="formFile" style="cursor: pointer;">얼굴 이미지를 올려주세요</label> -->
-                </div>
-                
-                <div>
-                  <button onclick="init();" type="button">click</button>
                 </div>
                 <div style="margin: auto; display: block; max-inline-size: 200px; min-inline-size: 150px;">
                   <img id="frame" src="" class="img-fluid" style="margin-bottom: 4vh; "/>
@@ -83,7 +81,7 @@
             <label class="form-check-label" for="exampleCheck1">개인정보 수집에 동의</label>
             </div>
             <div class="d-grid gap-2 col-2 mx-auto">
-                <button type="submit" class="btn btn-success" onclick="init();">결과 보기</button>
+                <button id="sbm_btn" class="btn btn-success" >확인</button>
             </div>  
         </form>
         <div id="label-container"></div>
@@ -142,7 +140,7 @@
       }
       function preview() {
           frame.src = URL.createObjectURL(event.target.files[0]);
-          
+          console.log(frame);
       }
       function clearImage() {
           document.getElementById('formFile').value = null;
@@ -156,7 +154,13 @@
     
         // the link to your model provided by Teachable Machine export panel
         async function init() {
-            const URL = "https://teachablemachine.withgoogle.com/models/ILYRx_bl1/";
+            var gender_form = document.getElementById("gender").value
+            if(gender_form == '남자'){
+              var URL = "https://teachablemachine.withgoogle.com/models/ILYRx_bl1/";
+            }
+            else {
+              var URL = "https://teachablemachine.withgoogle.com/models/RDi9pQphA/";
+            }
             const modelURL = URL + "model.json";
             const metadataURL = URL + "metadata.json";
             let model, maxPredictions;
@@ -165,15 +169,11 @@
             // or files from your local hard drive
             // Note: the pose library adds "tmImage" object to your window (window.tmImage)
             model = await tmImage.load(modelURL, metadataURL);
-            maxPredictions = model.getTotalClasses();    
+            maxPredictions = model.getTotalClasses();
             // append elements to the DOM
-            // labelContainer = document.getElementById("label-container");
-            // for (let i = 0; i < maxPredictions; i++) { // and class labels
-            //     labelContainer.appendChild(document.createElement("div"));
-            // }
             // predict can take in an image, video or canvas html element
-            var image = document.getElementById("frame");
-            const prediction = await model.predict(image, false);
+            var model_image = document.getElementById("frame");
+            const prediction = await model.predict(model_image, false);
             var max = 0;
             var keyword = '';
             for (let i = 0; i < maxPredictions; i++) {
@@ -184,8 +184,14 @@
                   keyword = prediction[i].className;
                 }
             }
-            
-        }
+            var fd = document.forms.formdata;
+            var input_data = document.createElement('input');
+
+            input_data.name = 'keyword'
+            input_data.type = 'hidden';
+            input_data.value = keyword;
+            fd.appendChild(input_data);            
+          }
     </script>
     
   </body>
