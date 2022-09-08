@@ -3,21 +3,25 @@ from urllib.request import Request
 
 from fastapi import Depends, FastAPI, HTTPException, Form, Body, Request, File, UploadFile
 from sqlalchemy.orm import Session
+from fastapi.responses import HTMLResponse
+from fastapi.templating import Jinja2Templates
 
 from sql_app import crud, models, schemas
 from sql_app.database import SessionLocal, engine
-from fastapi.responses import HTMLResponse
-from fastapi.templating import Jinja2Templates
+from app.config import Settings
 
 import os
 import base64
 import io
+from random import randrange
 
-# from keras.models import load_model
 from PIL import Image, ImageOps
 import numpy as np
+import boto3
 
 models.Base.metadata.create_all(bind=engine)
+settings = Settings()
+
 
 app = FastAPI()
 templates = Jinja2Templates(directory="templates")
@@ -31,22 +35,24 @@ def get_db():
         db.close()
 
 @app.get("/", response_class=HTMLResponse)
-async def main(request: Request):
+def main(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
-# @app.post("/result")
-# async def return_result(request : Request, image: UploadFile = File(), keyword: str=Form()):
-#     try:
-#         contents = image.file.read()
-#     finally:
-#         image.file.close()
 
-#     print(type(contents))
-#     base64_encoded_image = base64.b64encode(contents).decode("utf-8")
-
-#     return templates.TemplateResponse("result.html", {"request":request, "image": base64_encoded_image})
 @app.post("/result/")
-async def create_user(request: Request, image: UploadFile = File() , name: str = Form(), gender: str = Form(), year: str = Form(), month: str=Form(), day: str=Form(),keyword: str=Form(), db: Session= Depends(get_db)):
-    print(name,gender,year,month,day)
+def create_user(request: Request, image: UploadFile = File() , name: str = Form(), gender: str = Form(), year: str = Form(), month: str=Form(), day: str=Form(),keyword: str=Form(), db: Session= Depends(get_db)):
+    if name == '':
+        raise HTTPException(status=400, detail="name not registered")
+    if year == '':
+        raise HTTPException(status=400, detail="year not registered")
+    if month == '':
+        raise HTTPException(status=400, detail="month not registered")
+    if day == '':
+        raise HTTPException(status=400, detail="day not registered")
+    if image == '':
+        raise HTTPException(status=400, detail="image not registered")
+    if keyword == '':
+        raise HTTPException(status=400, detail="keyword not registered")
+        
     user = schemas.UserCreate
     user.name = name
     user.gender = gender
@@ -56,33 +62,27 @@ async def create_user(request: Request, image: UploadFile = File() , name: str =
     crud.create_user(db, user=user) 
     saju = crud.get_saju(db, user.gender, user.year, user.month, user.day)
     
-    filename = image.filename
-    content_type = image.content_type
-    print(filename, content_type)
-    # print(image)
-    
     try:
         contents = image.file.read()
     finally:
         image.file.close()
 
-    print(type(contents))
-    base64_encoded_image = base64.b64encode(contents).decode("utf-8")
-    print(type(base64_encoded_image))
+    my_image = base64.b64encode(contents).decode("utf-8")
 
-    base_dir = "images/"
+    ########## S3 configure & get images ########
+    s3 = boto3.resource('s3', aws_access_key_id=settings.aws_access_key_id, aws_secret_access_key=settings.aws_secret_access_key, region_name=settings.region)
+    bucket = s3.Bucket(settings.bucket_name)
+    image_list = []
 
-    keyword_list = {0:"강아지상",1:"고양이상",2:"토끼상",3:"곰상", 4:"공룡상"}
-    print(keyword)
+    for url in bucket.objects.all():
+        if user.gender in url.key and keyword in url.key:
+            image_list.append(url.key)
 
-    # user_keyword = keyword_list[np.argmax(prediction)]
-    other_image_dir = base_dir+user.gender+'/'+keyword+'/'+os.listdir(base_dir+user.gender+'/'+keyword)[0]
+    fixed_image = image_list[randrange(4)]
+    obj = s3.Object(settings.bucket_name, fixed_image)
+    file_obj = obj.get()["Body"].read()
+    f = io.BytesIO(file_obj)
+    im_bytes = f.getvalue()    
+    other_image = base64.b64encode(im_bytes).decode("utf-8")
 
-    img = Image.open(other_image_dir)
-
-    im_file = io.BytesIO()
-    img.save(im_file, format="JPEG")
-    im_bytes = im_file.getvalue()
-    im_b64 = base64.b64encode(im_bytes).decode("utf-8")
-
-    return templates.TemplateResponse("result.html", {"request":request,"name":user.name, "image":base64_encoded_image, "other_image":im_b64, "keyword": keyword ,"look":saju.look, "personality":saju.personality})
+    return templates.TemplateResponse("result.html", {"request":request,"name":user.name, "image":my_image, "other_image":other_image, "keyword": keyword ,"look":saju.look, "personality":saju.personality})

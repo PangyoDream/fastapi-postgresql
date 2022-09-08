@@ -31,7 +31,7 @@
             <div class="mx-auto" >
                 <div class="mb-5">
                     <label for="formFile" class="form-label">얼굴 이미지</label>
-                    <input name= "image" class="form-control" type="file" id="formFile" onchange="preview(); init();">
+                    <input name= "image" class="form-control" type="file" id="formFile" onchange="preview(); init();" /required>
                     <!-- <button type="button" onclick=" init();">click</button> -->
                     
                     <!-- <label for="formFile" style="cursor: pointer;">얼굴 이미지를 올려주세요</label> -->
@@ -42,12 +42,12 @@
               </div>
 
             <div class="form-floating mb-3">
-            <input type="text" class="form-control" id="name" name="name" placeholder="name">
+            <input type="text" class="form-control" id="name" name="name" placeholder="name" /required>
             <label for="name">이름</label>
             </div>
             <div class="mb-3">
                 <label for="Inputgender" class="form-label">성별</label>
-                <select name="gender" id="gender" class="form-select" aria-label="Default select example">
+                <select name="gender" id="gender" class="form-select" aria-label="Default select example" /required>
                     <option value="남자">남자</option>
                     <option value="여자">여자</option>
                 </select>
@@ -56,28 +56,28 @@
                 <label for="Inputbirth" class="form-label">생년월일</label>
                 <div class="col-md">
                     <div class="form-floating">
-                      <select name="year" class="form-select" id="year" aria-label="Floating label select example">
+                      <select name="year" class="form-select" id="year" aria-label="Floating label select example" /required>
                       </select>
                       <label for="floatingSelectGrid">년도</label>
                     </div>
                 </div>
                 <div class="col-md">
                     <div class="form-floating">
-                      <select name="month" class="form-select" id="month" aria-label="Floating label select example">
+                      <select name="month" class="form-select" id="month" aria-label="Floating label select example" /required>
                       </select>
                       <label for="floatingSelectGrid">월</label>
                     </div>
                 </div>
                 <div class="col-md">
                   <div class="form-floating">
-                    <select name="day" class="form-select" id="day" aria-label="Floating label select example">
+                    <select name="day" class="form-select" id="day" aria-label="Floating label select example" /required>
                     </select>
                     <label for="floatingSelectGrid">일</label>
                   </div>
                 </div>
             </div>
             <div class="mb-3 form-check ">
-            <input type="checkbox" class="form-check-input" id="exampleCheck1">
+            <input type="checkbox" class="form-check-input" id="exampleCheck1" /required>
             <label class="form-check-label" for="exampleCheck1">개인정보 수집에 동의</label>
             </div>
             <div class="d-grid gap-2 col-2 mx-auto">
@@ -154,44 +154,44 @@
     
         // the link to your model provided by Teachable Machine export panel
         async function init() {
-            var gender_form = document.getElementById("gender").value
-            if(gender_form == '남자'){
-              var URL = "https://teachablemachine.withgoogle.com/models/ILYRx_bl1/";
-            }
-            else {
-              var URL = "https://teachablemachine.withgoogle.com/models/RDi9pQphA/";
-            }
-            const modelURL = URL + "model.json";
-            const metadataURL = URL + "metadata.json";
-            let model, maxPredictions;
-            // load the model and metadata
-            // Refer to tmImage.loadFromFiles() in the API to support files from a file picker
-            // or files from your local hard drive
-            // Note: the pose library adds "tmImage" object to your window (window.tmImage)
-            model = await tmImage.load(modelURL, metadataURL);
-            maxPredictions = model.getTotalClasses();
-            // append elements to the DOM
-            // predict can take in an image, video or canvas html element
-            var model_image = document.getElementById("frame");
-            const prediction = await model.predict(model_image, false);
-            var max = 0;
-            var keyword = '';
-            for (let i = 0; i < maxPredictions; i++) {
-                const classPrediction =
-                    prediction[i].className + ": " + prediction[i].probability.toFixed(2);
-                if (prediction[i].probability.toFixed(2) > max){
-                  max = prediction[i].probability.toFixed(2);
-                  keyword = prediction[i].className;
-                }
-            }
-            var fd = document.forms.formdata;
-            var input_data = document.createElement('input');
-
-            input_data.name = 'keyword'
-            input_data.type = 'hidden';
-            input_data.value = keyword;
-            fd.appendChild(input_data);            
+          var gender_form = document.getElementById("gender").value
+          if(gender_form == '남자'){
+            var URL = "https://teachablemachine.withgoogle.com/models/ILYRx_bl1/";
           }
+          else {
+            var URL = "https://teachablemachine.withgoogle.com/models/RDi9pQphA/";
+          }
+          const modelURL = URL + "model.json";
+          const metadataURL = URL + "metadata.json";
+          let model, maxPredictions;
+          // load the model and metadata
+          // Refer to tmImage.loadFromFiles() in the API to support files from a file picker
+          // or files from your local hard drive
+          // Note: the pose library adds "tmImage" object to your window (window.tmImage)
+          model = await tmImage.load(modelURL, metadataURL);
+          maxPredictions = model.getTotalClasses();
+          // append elements to the DOM
+          // predict can take in an image, video or canvas html element
+          var model_image = document.getElementById("frame");
+          const prediction = await model.predict(model_image, false);
+          var max = 0;
+          var keyword = '';
+          for (let i = 0; i < maxPredictions; i++) {
+              const classPrediction =
+                  prediction[i].className + ": " + prediction[i].probability.toFixed(2);
+              if (prediction[i].probability.toFixed(2) > max){
+                max = prediction[i].probability.toFixed(2);
+                keyword = prediction[i].className;
+              }
+          }
+          var fd = document.forms.formdata;
+          var input_data = document.createElement('input');
+
+          input_data.name = 'keyword'
+          input_data.type = 'hidden';
+          input_data.value = keyword;
+          fd.appendChild(input_data);            
+        }
     </script>
     
   </body>
