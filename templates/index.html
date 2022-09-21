@@ -4,105 +4,128 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>NUMANGUAN</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx"
+      crossorigin="anonymous">
     <!-- JS, Popper.js, and jQuery -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
-    integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
-    crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
-    integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
-    crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
-    integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
-    crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.3.1/dist/tf.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8/dist/teachablemachine-image.min.js"></script>
+      integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+      crossorigin="anonymous"></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+      integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+      crossorigin="anonymous"></script>
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
+      integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
+      crossorigin="anonymous"></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.3.1/dist/tf.min.js"></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8/dist/teachablemachine-image.min.js"></script>
   </head>
-  <body>
-    <header class="pb-3 mb-4">
-    <div class="bg-success p-2 text-white">NUMANGUAN</div>
-    <div class="bg-success p-2 " style="--bs-bg-opacity: .5;">누굴 만나든 관상없어!</div>
-    </header>
-    <div class="container p-5 mb-4 bg-light rounded-3">
-        <div class="mx-auto" style="width: 200px; margin-top: 2vh; margin-bottom: 2vh;">
-            정보를 입력해주세요
-        </div>
-        <form action="/result" method="post" enctype="multipart/form-data" id="formdata" >
-            <div class="mx-auto" >
-                <div class="mb-5">
-                    <label for="formFile" class="form-label">얼굴 이미지</label>
-                    <input name= "image" class="form-control" type="file" id="formFile" onchange="preview(); init();" /required>
-                    <!-- <button type="button" onclick=" init();">click</button> -->
-                    
-                    <!-- <label for="formFile" style="cursor: pointer;">얼굴 이미지를 올려주세요</label> -->
-                </div>
-                <div style="margin: auto; display: block; max-inline-size: 200px; min-inline-size: 150px;">
-                  <img id="frame" src="" class="img-fluid" style="margin-bottom: 4vh; "/>
-                </div>
-              </div>
 
-            <div class="form-floating mb-3">
-            <input type="text" class="form-control" id="name" name="name" placeholder="name" /required>
-            <label for="name">이름</label>
+  <body class="vh-100">
+    <header class="container px-0">
+      <div class="bg-success text-white">
+        <p class="py-2 ps-2 mb-0 fw-bold">
+          NUMANGUAN
+        </p>
+      </div>
+      <div class="bg-success" style="--bs-bg-opacity: .5;">
+        <p class="py-2 ps-2 fw-bold">
+          누굴 만나든 관상없어
+        </p>
+      </div>
+    </header>
+
+    <section class="container bg-dark px-4 rounded-3 vw-100" style="--bs-bg-opacity: .1; padding-bottom: 10vh;">
+      <form action="/result" method="post" enctype="multipart/form-data"
+        id="formdata">
+        <div class="mx-auto">
+          <div class="py-3">
+            <label for="formFile" class="form-label">얼굴 사진</label>
+            <input name="image" class="form-control" type="file" id="formFile"
+              onchange="preview();" /required>
+          </div>
+          <div class="mx-auto text-center">
+            <img id="frame" src="" class="img-fluid pb-3" hidden/>
+          </div>
+        </div>
+
+        <div class="form-floating pb-3">
+          <input type="text" class="form-control" id="name" name="name"
+            placeholder="name" /required>
+          <label for="name">이름</label>
+        </div>
+        <div class="pb-3">
+          <select name="gender" id="gender" class="form-select"
+            aria-label="Default select example" /required>
+            <option value="" disabled selected>성별</option>
+            <option value="남자">남자</option>
+            <option value="여자">여자</option>
+          </select>
+        </div>
+        <div class="row">
+          <label for="Inputbirth" class="form-label">생년월일</label>
+          <div class="col">
+            <div class="form-floating">
+              <select name="year" class="form-select" id="year"
+                aria-label="Floating label select example" /required>
+              </select>
+              <label for="floatingSelectGrid">년도</label>
             </div>
-            <div class="mb-3">
-                <label for="Inputgender" class="form-label">성별</label>
-                <select name="gender" id="gender" class="form-select" aria-label="Default select example" /required>
-                    <option value="남자">남자</option>
-                    <option value="여자">여자</option>
-                </select>
+          </div>
+          <div class="col">
+            <div class="form-floating">
+              <select name="month" class="form-select" id="month"
+                aria-label="Floating label select example" /required>
+              </select>
+              <label for="floatingSelectGrid">월</label>
             </div>
-            <div class="row g-2">
-                <label for="Inputbirth" class="form-label">생년월일</label>
-                <div class="col-md">
-                    <div class="form-floating">
-                      <select name="year" class="form-select" id="year" aria-label="Floating label select example" /required>
-                      </select>
-                      <label for="floatingSelectGrid">년도</label>
-                    </div>
-                </div>
-                <div class="col-md">
-                    <div class="form-floating">
-                      <select name="month" class="form-select" id="month" aria-label="Floating label select example" /required>
-                      </select>
-                      <label for="floatingSelectGrid">월</label>
-                    </div>
-                </div>
-                <div class="col-md">
-                  <div class="form-floating">
-                    <select name="day" class="form-select" id="day" aria-label="Floating label select example" /required>
-                    </select>
-                    <label for="floatingSelectGrid">일</label>
-                  </div>
-                </div>
+          </div>
+          <div class="col">
+            <div class="form-floating">
+              <select name="day" class="form-select" id="day"
+                aria-label="Floating label select example" /required>
+              </select>
+              <label for="floatingSelectGrid">일</label>
             </div>
-            <div class="mb-3 form-check ">
-            <input type="checkbox" class="form-check-input" id="exampleCheck1" /required>
-            <label class="form-check-label" for="exampleCheck1">개인정보 수집에 동의</label>
-            </div>
-            <div class="d-grid gap-2 col-2 mx-auto">
-                <button id="sbm_btn" class="btn btn-success" >확인</button>
-            </div>  
-        </form>
-        <div id="label-container"></div>
-        <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
-            <div class="col-md-4 d-flex align-items-center">
-              <span class="text-muted">© 2022 Company, NUMANGUAN Inc</span>
-            </div>
-        
-            <ul class="nav col-md-4 justify-content-end list-unstyled d-flex">
-              <li class="ms-3"><a class="text-muted" href="#"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-twitter" viewBox="0 0 16 16">
-                <path d="M5.026 15c6.038 0 9.341-5.003 9.341-9.334 0-.14 0-.282-.006-.422A6.685 6.685 0 0 0 16 3.542a6.658 6.658 0 0 1-1.889.518 3.301 3.301 0 0 0 1.447-1.817 6.533 6.533 0 0 1-2.087.793A3.286 3.286 0 0 0 7.875 6.03a9.325 9.325 0 0 1-6.767-3.429 3.289 3.289 0 0 0 1.018 4.382A3.323 3.323 0 0 1 .64 6.575v.045a3.288 3.288 0 0 0 2.632 3.218 3.203 3.203 0 0 1-.865.115 3.23 3.23 0 0 1-.614-.057 3.283 3.283 0 0 0 3.067 2.277A6.588 6.588 0 0 1 .78 13.58a6.32 6.32 0 0 1-.78-.045A9.344 9.344 0 0 0 5.026 15z"/>
-              </svg></a></li>
-              <li class="ms-3"><a class="text-muted" href="#"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-instagram" viewBox="0 0 16 16">
-                <path d="M8 0C5.829 0 5.556.01 4.703.048 3.85.088 3.269.222 2.76.42a3.917 3.917 0 0 0-1.417.923A3.927 3.927 0 0 0 .42 2.76C.222 3.268.087 3.85.048 4.7.01 5.555 0 5.827 0 8.001c0 2.172.01 2.444.048 3.297.04.852.174 1.433.372 1.942.205.526.478.972.923 1.417.444.445.89.719 1.416.923.51.198 1.09.333 1.942.372C5.555 15.99 5.827 16 8 16s2.444-.01 3.298-.048c.851-.04 1.434-.174 1.943-.372a3.916 3.916 0 0 0 1.416-.923c.445-.445.718-.891.923-1.417.197-.509.332-1.09.372-1.942C15.99 10.445 16 10.173 16 8s-.01-2.445-.048-3.299c-.04-.851-.175-1.433-.372-1.941a3.926 3.926 0 0 0-.923-1.417A3.911 3.911 0 0 0 13.24.42c-.51-.198-1.092-.333-1.943-.372C10.443.01 10.172 0 7.998 0h.003zm-.717 1.442h.718c2.136 0 2.389.007 3.232.046.78.035 1.204.166 1.486.275.373.145.64.319.92.599.28.28.453.546.598.92.11.281.24.705.275 1.485.039.843.047 1.096.047 3.231s-.008 2.389-.047 3.232c-.035.78-.166 1.203-.275 1.485a2.47 2.47 0 0 1-.599.919c-.28.28-.546.453-.92.598-.28.11-.704.24-1.485.276-.843.038-1.096.047-3.232.047s-2.39-.009-3.233-.047c-.78-.036-1.203-.166-1.485-.276a2.478 2.478 0 0 1-.92-.598 2.48 2.48 0 0 1-.6-.92c-.109-.281-.24-.705-.275-1.485-.038-.843-.046-1.096-.046-3.233 0-2.136.008-2.388.046-3.231.036-.78.166-1.204.276-1.486.145-.373.319-.64.599-.92.28-.28.546-.453.92-.598.282-.11.705-.24 1.485-.276.738-.034 1.024-.044 2.515-.045v.002zm4.988 1.328a.96.96 0 1 0 0 1.92.96.96 0 0 0 0-1.92zm-4.27 1.122a4.109 4.109 0 1 0 0 8.217 4.109 4.109 0 0 0 0-8.217zm0 1.441a2.667 2.667 0 1 1 0 5.334 2.667 2.667 0 0 1 0-5.334z"/>
-              </svg></a></li>
-              <li class="ms-3"><a class="text-muted" href="#"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-facebook" viewBox="0 0 16 16">
-                <path d="M16 8.049c0-4.446-3.582-8.05-8-8.05C3.58 0-.002 3.603-.002 8.05c0 4.017 2.926 7.347 6.75 7.951v-5.625h-2.03V8.05H6.75V6.275c0-2.017 1.195-3.131 3.022-3.131.876 0 1.791.157 1.791.157v1.98h-1.009c-.993 0-1.303.621-1.303 1.258v1.51h2.218l-.354 2.326H9.25V16c3.824-.604 6.75-3.934 6.75-7.951z"/>
-              </svg></a></li>
-            </ul>
-        </footer>
-    </div>
+          </div>
+        </div>
+        <div class="py-2 form-check ">
+          <input type="checkbox" class="form-check-input" id="exampleCheck1"
+            /required>
+          <label class="form-check-label" for="exampleCheck1">개인정보 수집에 동의</label>
+        </div>
+        <div class="d-grid gap-2 col-2 mx-auto py-3" style="justify-content:
+          center;">
+          <button id="sbm_btn" class="btn btn-success"
+            style="min-width: 25vw;" type="button" onclick="chk();">확인</button>
+          <div class="spinner-border text-success mx-auto" role="status"
+            id="loading" hidden>
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        </div>
+      </form>
+    </section>
+
+    <footer class="container bottom-100">
+      <div class="col-md-4 pb-2 d-flex">
+        <span class="text-muted">© 2022 Company, NUMAN Inc</span>
+      </div>
+      <div class="px-0">
+        <ins class="kakao_ad_area" style="display:none;"
+          data-ad-unit="DAN-aij5mmHFTQXDn3oI"
+          data-ad-width="320"
+          data-ad-height="50"></ins>
+        <script type="text/javascript"
+          src="//t1.daumcdn.net/kas/static/ba.min.js" async></script>
+      </div>
+    </footer>
+
     <script>
       
       $(document).ready(function () {
@@ -138,21 +161,48 @@
         }
     
       }
+      function chk() {
+        var f = document.forms.formdata;
+        if(f.formFile.value == ""){
+          alert("얼굴이 포함된 사진을 입력해주세요.");
+        }
+        else if(f.name.value == ""){
+          alert("이름을 입력해주세요.");
+        }
+        else if(f.gender.value == ""){
+          alert("성별을 입력해주세요.");
+        }
+        else if(f.year.value == ""){
+          alert("태어난 해를 입력해주세요.");
+        }
+        else if(f.month.value == ""){
+          alert("태어난 달을 입력해주세요.");
+        }
+        else if(f.day.value == ""){
+          alert("태어난 날을 입력해주세요.");
+        }
+        else if(f.exampleCheck1.checked == false){
+          alert("개인정보 이용에 동의해주세요.");
+        }
+        else{
+          loading_change();
+          init();
+        }
+      }
       function preview() {
-          frame.src = URL.createObjectURL(event.target.files[0]);
-          console.log(frame);
+        frame.hidden = false;
+        frame.src = URL.createObjectURL(event.target.files[0]);
+      }
+      function loading_change() {
+        sbm_btn.hidden = true;
+        loading.hidden = false;          
       }
       function clearImage() {
           document.getElementById('formFile').value = null;
           frame.src = "";
       }       
-    </script>
-    
-    <script type="text/javascript">
-        // More API functions here:
-        // https://github.com/googlecreativelab/teachablemachine-community/tree/master/libraries/image
-    
-        // the link to your model provided by Teachable Machine export panel
+      </script>
+      <script type="text/javascript">
         async function init() {
           var gender_form = document.getElementById("gender").value
           if(gender_form == '남자'){
@@ -164,14 +214,10 @@
           const modelURL = URL + "model.json";
           const metadataURL = URL + "metadata.json";
           let model, maxPredictions;
-          // load the model and metadata
-          // Refer to tmImage.loadFromFiles() in the API to support files from a file picker
-          // or files from your local hard drive
-          // Note: the pose library adds "tmImage" object to your window (window.tmImage)
+
           model = await tmImage.load(modelURL, metadataURL);
           maxPredictions = model.getTotalClasses();
-          // append elements to the DOM
-          // predict can take in an image, video or canvas html element
+
           var model_image = document.getElementById("frame");
           const prediction = await model.predict(model_image, false);
           var max = 0;
@@ -190,10 +236,9 @@
           input_data.name = 'keyword'
           input_data.type = 'hidden';
           input_data.value = keyword;
-          fd.appendChild(input_data);            
+          fd.appendChild(input_data); 
+          fd.submit();      
         }
     </script>
-    
   </body>
-  
 </html>
