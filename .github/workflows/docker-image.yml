@@ -5,10 +5,8 @@ on:
     branches: [ "main" ]
 
 jobs:
-
-  build:
-
-    runs-on: ubuntu20.04
+  CI:
+    runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v3
@@ -35,23 +33,23 @@ jobs:
       env:
         FAST_ENV: ${{ toJson(secrets) }}
         
-  deploy_to_ec2:
-    name: deploy env file and FastAPI
-    needs: [ "build" ]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out the repo
-        uses: actions/checkout@v3
+#   CD:
+#     name: deploy env file and FastAPI
+#     needs: [ "CI" ]
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Check out the repo
+#         uses: actions/checkout@v3
         
-      - name: Commit and push changes
-        uses: devops-infra/action-commit-push@v0.3
-        with:
-          github_token: ${{ secrets.GIT_ACCESS_TOKEN }}
-          commit_message: Image version updated
+#       - name: Commit and push changes
+#         uses: devops-infra/action-commit-push@v0.3
+#         with:
+#           github_token: ${{ secrets.GIT_ACCESS_TOKEN }}
+#           commit_message: Image version updated
           
-      - name: deploy with AWS codeDeploy
-        run: aws deploy create-deployment
-          --application-name numanguan
-          --deployment-config-name CodeDeployDefault.OneAtATime
-          --deployment-group-name numanguan_deploy_group
+#       - name: deploy with AWS codeDeploy
+#         run: aws deploy create-deployment
+#           --application-name numanguan
+#           --deployment-config-name CodeDeployDefault.OneAtATime
+#           --deployment-group-name numanguan_deploy_group
   
