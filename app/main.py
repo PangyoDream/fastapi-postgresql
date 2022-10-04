@@ -40,18 +40,6 @@ def main(request: Request):
 
 @app.post("/result/")
 def create_user(request: Request, image: UploadFile = File() , name: str = Form(), gender: str = Form(), year: str = Form(), month: str=Form(), day: str=Form(),keyword: str=Form(), db: Session= Depends(get_db)):
-    if name == '':
-        raise HTTPException(status=400, detail="name not registered")
-    if year == '':
-        raise HTTPException(status=400, detail="year not registered")
-    if month == '':
-        raise HTTPException(status=400, detail="month not registered")
-    if day == '':
-        raise HTTPException(status=400, detail="day not registered")
-    if image == '':
-        raise HTTPException(status=400, detail="image not registered")
-    if keyword == '':
-        raise HTTPException(status=400, detail="keyword not registered")
         
     user = schemas.UserCreate
     user.name = name
@@ -82,7 +70,7 @@ def create_user(request: Request, image: UploadFile = File() , name: str = Form(
     obj = s3.Object(settings.bucket_name, fixed_image)
     file_obj = obj.get()["Body"].read()
     f = io.BytesIO(file_obj)
-    im_bytes = f.getvalue()    
+    im_bytes = f.getvalue()
     other_image = base64.b64encode(im_bytes).decode("utf-8")
 
     return templates.TemplateResponse("result.html", {"request":request,"name":user.name, "image":my_image, "other_image":other_image, "keyword": keyword ,"look":saju.look, "personality":saju.personality})

@@ -3,7 +3,11 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>NUMANGUAN</title>
+    <title>NUMANGUAN - AI기반 관상, 운명의 단짝 매칭 서비스</title>
+    <meta name="description" content="인공지능으로 닮은 연예인과 키워드를 찾을 수 있습니다. 사주팔자 정보로 운명의 사람의 성격과 외모를 찾을 수 있습니다.">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="AI기반 관상, 운명의 단짝 매칭 서비스">
+    <meta property="og:description" content="인공지능으로 닮은 연예인과 키워드를 찾을 수 있습니다. 사주팔자 정보로 운명의 사람의 성격과 외모를 찾을 수 있습니다.">
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css"
       rel="stylesheet"
@@ -25,6 +29,7 @@
       src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.3.1/dist/tf.min.js"></script>
     <script
       src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8/dist/teachablemachine-image.min.js"></script>
+    <meta name="naver-site-verification" content="767b3a4672a87e3a981bb364689a968f901e4cb4" />
   </head>
 
   <body class="vh-100">
@@ -36,7 +41,7 @@
       </div>
       <div class="bg-success" style="--bs-bg-opacity: .5;">
         <p class="py-2 ps-2 fw-bold">
-          누굴 만나든 관상없어
+          AI기반 관상, 운명의 단짝 매칭 서비스
         </p>
       </div>
     </header>
@@ -51,7 +56,7 @@
               onchange="preview();" /required>
           </div>
           <div class="mx-auto text-center">
-            <img id="frame" src="" class="img-fluid pb-3" hidden/>
+            <img id="frame" src="" class="img-fluid pb-3" style="max-width:30%; height:auto;" hidden/>
           </div>
         </div>
 
@@ -98,7 +103,7 @@
         <div class="py-2 form-check ">
           <input type="checkbox" class="form-check-input" id="exampleCheck1"
             /required>
-          <label class="form-check-label" for="exampleCheck1">개인정보 수집에 동의</label>
+          <label class="form-check-label" for="exampleCheck1">개인정보 수집에 동의(사진 정보는 수집되지 않습니다.)</label>
         </div>
         <div class="d-grid gap-2 col-2 mx-auto py-3" style="justify-content:
           center;">
@@ -206,10 +211,10 @@
         async function init() {
           var gender_form = document.getElementById("gender").value
           if(gender_form == '남자'){
-            var URL = "https://teachablemachine.withgoogle.com/models/ILYRx_bl1/";
+            var URL = "https://teachablemachine.withgoogle.com/models/llHKNWkuD/";
           }
           else {
-            var URL = "https://teachablemachine.withgoogle.com/models/RDi9pQphA/";
+            var URL = "https://teachablemachine.withgoogle.com/models/qszTJuFES/";
           }
           const modelURL = URL + "model.json";
           const metadataURL = URL + "metadata.json";
@@ -222,14 +227,15 @@
           const prediction = await model.predict(model_image, false);
           var max = 0;
           var keyword = '';
+          var keywords = {'1':'강아지상','2':'고양이상','3':'곰돌이상','4':'공룡상','5':'토끼상'};
+
           for (let i = 0; i < maxPredictions; i++) {
-              const classPrediction =
-                  prediction[i].className + ": " + prediction[i].probability.toFixed(2);
               if (prediction[i].probability.toFixed(2) > max){
                 max = prediction[i].probability.toFixed(2);
                 keyword = prediction[i].className;
               }
           }
+          keyword = keywords[keyword]
           var fd = document.forms.formdata;
           var input_data = document.createElement('input');
 
@@ -237,7 +243,7 @@
           input_data.type = 'hidden';
           input_data.value = keyword;
           fd.appendChild(input_data); 
-          fd.submit();      
+          fd.submit();
         }
     </script>
   </body>
