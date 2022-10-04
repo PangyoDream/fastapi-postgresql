@@ -37,7 +37,7 @@ jobs:
   deploy_to_ec2:
     name: deploy env file and FastAPI
     needs: [ "build" ]
-    runs-on: [ self-hosted, prod_label ]
+    runs-on: prod_label
     steps:
       - name: Check out the repo
         uses: actions/checkout@v3
