@@ -42,11 +42,11 @@ jobs:
       - name: Check out the repo
         uses: actions/checkout@v3
         
-      - name: Commit and push changes
-        uses: devops-infra/action-commit-push@v0.3
-        with:
-          github_token: ${{ secrets.GIT_ACCESS_TOKEN }}
-          commit_message: Image version updated
+#       - name: Commit and push changes
+#         uses: devops-infra/action-commit-push@v0.3
+#         with:
+#           github_token: ${{ secrets.GIT_ACCESS_TOKEN }}
+#           commit_message: Image version updated
           
       - name: Login to DockerHub
         uses: docker/login-action@v2
