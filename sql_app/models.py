@@ -25,5 +25,3 @@ class Saju(Base):
     day = Column(Integer,  index=True)
     look = Column(String(512), index=True)
     personality = Column(String(512), index=True)
-    
-    # owner_gender = Column(String, ForeignKey("users.gender"))

@@ -28,30 +28,27 @@ jobs:
         push: true
         tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKER_REGISTRY }}:${{ secrets.DOCKER_TAG }}
       
-    - name: Create .env file
-      run: |
-        jq -r 'to_entries|map("\(.key)=\(.value|tostring)")|.[]' <<< "$FAST_ENV" > .env
-      env:
-        FAST_ENV: ${{ toJson(secrets) }}
-        
-  # deploy_to_ec2:
-  #   name: deploy env file and FastAPI
-  #   needs: [ "build" ]
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Check out the repo
-  #       uses: actions/checkout@v3
-        
-  #     - name: Commit and push changes
-  #       uses: devops-infra/action-commit-push@v0.3
-  #       with:
-  #         github_token: ${{ secrets.GIT_ACCESS_TOKEN }}
-  #         commit_message: Image version updated
-          
-  #     - name: deploy with AWS codeDeploy
-  #       run: aws deploy create-deployment
-  #         --application-name numanguan
-  #         --deployment-config-name CodeDeployDefault.OneAtATime
-  #         --deployment-group-name numanguan_deploy_group
 
-  
+        
+  deploy_to_ec2:
+    name: deploy env file and FastAPI
+    needs: [ "build" ]
+    runs-on: self-hosted
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v3
+        
+      - name: Create .env file
+        run: |
+          jq -r 'to_entries|map("\(.key)=\(.value|tostring)")|.[]' <<< "$FAST_ENV" > .env
+        env:
+          FAST_ENV: ${{ toJson(secrets) }}
+          
+      - name: Login to DockerHub
+        run: |
+          docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_TOKEN }}
+      
+      - name: Docker run
+        run: |
+          docker stop ${{ secrets.DOCKER_IMAGENAME }} && docker rm ${{ secrets.DOCKER_IMAGENAME }}
+          docker run -itd -p 80:8000 --name ${{ secrets.DOCKER_IMAGENAME }} --env-file .env ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKER_REGISTRY }}:${{ secrets.DOCKER_TAG }}
