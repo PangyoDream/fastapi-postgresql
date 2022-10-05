@@ -51,10 +51,5 @@ jobs:
       - name: Docker run
         run: |
           docker stop ${{ secrets.DOCKER_IMAGENAME }} && docker rm ${{ secrets.DOCKER_IMAGENAME }}
-<<<<<<< HEAD
-          docker run -itd -p 80:8000 --name ${{ secrets.DOCKER_IMAGENAME }} --env-file .env ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKER_REGISTRY }}:${{ secrets.DOCKER_TAG }}
-=======
           docker run -itd -p 80:8000 --name ${{ secrets.DOCKER_IMAGENAME }} --env-file .env ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKER_REGISTRY }}:${{ secrets.DOCKER_TAG }}
 
-  
->>>>>>> 620a8059004b543f0b3344a9c2008b9e7eb0903a
