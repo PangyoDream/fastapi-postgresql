@@ -3,7 +3,7 @@ from urllib.request import Request
 
 from fastapi import Depends, FastAPI, HTTPException, Form, Body, Request, File, UploadFile
 from sqlalchemy.orm import Session
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, FileResponse
 from fastapi.templating import Jinja2Templates
 
 from sql_app import crud, models, schemas
@@ -37,6 +37,10 @@ def get_db():
 @app.get("/", response_class=HTMLResponse)
 def main(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
+
+@app.get("/robots.txt", response_class=FileResponse)
+def robots():
+    return "../robots.txt"
 
 @app.post("/result/")
 def create_user(request: Request, image: UploadFile = File() , name: str = Form(), gender: str = Form(), year: str = Form(), month: str=Form(), day: str=Form(),keyword: str=Form(), db: Session= Depends(get_db)):
