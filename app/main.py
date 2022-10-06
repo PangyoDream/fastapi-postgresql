@@ -40,7 +40,7 @@ def main(request: Request):
 
 @app.get("/robots.txt", response_class=FileResponse)
 def robots():
-    return "../robots.txt"
+    return "robots.txt"
 
 @app.post("/result/")
 def create_user(request: Request, image: UploadFile = File() , name: str = Form(), gender: str = Form(), year: str = Form(), month: str=Form(), day: str=Form(),keyword: str=Form(), db: Session= Depends(get_db)):
