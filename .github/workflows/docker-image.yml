@@ -57,5 +57,5 @@ jobs:
         run: |
           docker stop ${{ secrets.DOCKER_IMAGENAME }} && docker rm ${{ secrets.DOCKER_IMAGENAME }}
           docker pull ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKER_REGISTRY }}:${{ secrets.DOCKER_TAG }}
-          docker image prune -y
+          docker image prune
           docker run -itd -p 80:8000 --name ${{ secrets.DOCKER_IMAGENAME }} --env-file .env ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKER_REGISTRY }}:${{ secrets.DOCKER_TAG }}
