@@ -56,10 +56,13 @@ jobs:
       - name: Docker run
         run: |
           docker stop ${{ secrets.DOCKER_IMAGENAME }}
-          if [ $ = 0 ]
+          if [ $? = 0 ]
           then
             docker container rm $(docker ps -f status=exited -q)
             docker image prune
+            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKER_REGISTRY }}:${{ secrets.DOCKER_TAG }}
+            docker run -itd -p 80:8000 --name ${{ secrets.DOCKER_IMAGENAME }} --env-file .env ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKER_REGISTRY }}:${{ secrets.DOCKER_TAG }}
+          else
+            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKER_REGISTRY }}:${{ secrets.DOCKER_TAG }}
+            docker run -itd -p 80:8000 --name ${{ secrets.DOCKER_IMAGENAME }} --env-file .env ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKER_REGISTRY }}:${{ secrets.DOCKER_TAG }}
           fi
-          docker pull ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKER_REGISTRY }}:${{ secrets.DOCKER_TAG }}
-          docker run -itd -p 80:8000 --name ${{ secrets.DOCKER_IMAGENAME }} --env-file .env ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKER_REGISTRY }}:${{ secrets.DOCKER_TAG }}
