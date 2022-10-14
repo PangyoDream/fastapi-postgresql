@@ -53,17 +53,15 @@ jobs:
         run: |
           docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_TOKEN }}
       
-      - name: Docker run
+      - name: Docker Container Check
         run: |
           docker stop ${{ secrets.DOCKER_IMAGENAME }}
-          status = $?
-          if [ $status = 1 ]
-          then
-            docker container rm $(docker ps -f status=exited -q)
-            docker image prune
-            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKER_REGISTRY }}:${{ secrets.DOCKER_TAG }}
-            docker run -itd -p 80:8000 --name ${{ secrets.DOCKER_IMAGENAME }} --env-file .env ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKER_REGISTRY }}:${{ secrets.DOCKER_TAG }}
-          else
-            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKER_REGISTRY }}:${{ secrets.DOCKER_TAG }}
-            docker run -itd -p 80:8000 --name ${{ secrets.DOCKER_IMAGENAME }} --env-file .env ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKER_REGISTRY }}:${{ secrets.DOCKER_TAG }}
-          fi
+          docker container rm $(docker ps -f status=exited -q)
+          docker image prune
+        continue-on-error: true
+
+      - name: Docker run
+        run: |
+          docker pull ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKER_REGISTRY }}:${{ secrets.DOCKER_TAG }}
+          docker run -itd -p 80:8000 --name ${{ secrets.DOCKER_IMAGENAME }} --env-file .env ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKER_REGISTRY }}:${{ secrets.DOCKER_TAG }}
+
