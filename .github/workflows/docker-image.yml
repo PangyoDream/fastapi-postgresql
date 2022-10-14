@@ -62,8 +62,7 @@ jobs:
             docker image prune
             docker pull ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKER_REGISTRY }}:${{ secrets.DOCKER_TAG }}
             docker run -itd -p 80:8000 --name ${{ secrets.DOCKER_IMAGENAME }} --env-file .env ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKER_REGISTRY }}:${{ secrets.DOCKER_TAG }}
-          elif [ $? = 1 ]
-          then
+          else
             docker pull ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKER_REGISTRY }}:${{ secrets.DOCKER_TAG }}
             docker run -itd -p 80:8000 --name ${{ secrets.DOCKER_IMAGENAME }} --env-file .env ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKER_REGISTRY }}:${{ secrets.DOCKER_TAG }}
           fi
