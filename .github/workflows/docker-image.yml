@@ -56,7 +56,8 @@ jobs:
       - name: Docker run
         run: |
           docker stop ${{ secrets.DOCKER_IMAGENAME }}
-          if [ $? = 0 ]
+          status = $?
+          if [ $status = 1 ]
           then
             docker container rm $(docker ps -f status=exited -q)
             docker image prune
