@@ -19,14 +19,15 @@ from PIL import Image, ImageOps
 import numpy as np
 import boto3
 
+import urllib
+
 models.Base.metadata.create_all(bind=engine)
 settings = Settings()
-
 
 app = FastAPI()
 templates = Jinja2Templates(directory="templates")
 
-# Dependency
+#Dependency
 def get_db():
     db = SessionLocal()
     try:

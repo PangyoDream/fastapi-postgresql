@@ -18,6 +18,7 @@ numpy = "1.20.*"
 protobuf = "3.9.*"
 python-dotenv = "^0.20.0"
 boto3 = "^1.24.67"
+requests = "^2.28.1"
 
 [tool.poetry.dev-dependencies]
 
