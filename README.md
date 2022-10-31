@@ -38,8 +38,6 @@ fastapi-postgresql
 
 - `app` : main 기능 디렉토리
 
-- `images` : favicon 이미지
-
 - `sql_app` : 데이터베이스 관련 디렉토리(ORM)
 
 - `templates` : html 템플릿 관련 디렉토리
