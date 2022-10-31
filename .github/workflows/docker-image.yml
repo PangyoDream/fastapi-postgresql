@@ -3,6 +3,13 @@ name: Update Docker Image for CI/CD
 on:
   push:
     branches: [ "main" ]
+    paths-ignore:
+      - ".github/**"
+      - ".dockerignore"
+      - ".gitignore"
+      - "LICENSE"
+      - "README.md"
+      - "robots.txt"
 
 jobs:
 
